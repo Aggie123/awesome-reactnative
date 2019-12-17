@@ -41,7 +41,7 @@ const isNumber = (text = "") => !isNaN(parseInt(text));
 const isString = (text = "") => typeof text === "string";
 
 // 创建"0","1","2","3","4"..."9"的数组,默认绘制数据
-const numberRange = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+const resourceData = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
 const getAnimationStyle = animation => {
     return {
@@ -89,6 +89,10 @@ class Ticker extends Component {
     };
 
     state = {
+        // 是否已测量
+        // measured: false,
+        // 高度
+        // height: 0,
         // 获取props中的字体大小
         fontSize: this.props.textStyle.fontSize,
     };
@@ -99,6 +103,22 @@ class Ticker extends Component {
             fontSize: this.props.textStyle.fontSize,
         });
     }
+
+
+    // handleMeasure = e => {
+
+    //     //测量高度
+    //     const height = e.nativeEvent.layout.height;
+    //     this.setState(state => {
+    //         if (state.measured) {
+    //             return null;
+    //         }
+    //         return {
+    //             measured: true,
+    //             height,
+    //         };
+    //     });
+    // };
 
     render() {
 
@@ -122,7 +142,7 @@ class Ticker extends Component {
                     children: childs,
                     textStyle,
                     rotateTime,
-                    rotateItems: numberRange,
+                    rotateItems: resourceData,
                 })}
 
 
@@ -233,6 +253,22 @@ class Tick extends Component {
             })
         ),
     };
+    componentDidMount() {
+        let nowValue = parseInt(this.props.text);
+        let now = nowValue + 10 - this.props.rollNum;
+
+        let init = getPosition({
+            text: "" + now,
+            items: this.props.rotateItems,
+            height: this.props.height,
+        });
+
+        this.setState({
+            animation: new Animated.Value(
+                init
+            ),
+        });
+    }
 
     componentWillReceiveProps(nextProps) {
 
@@ -286,4 +322,6 @@ class Tick extends Component {
         );
     }
 }
+
+export { Tick, resourceData as numberRange };
 export default Ticker;
